@@ -1,15 +1,19 @@
 defmodule Platform.Router.User do
   import Plug.Conn
   use Platform.Macros.Router
+  require EEx
 
-  def route("GET", ["users"], conn) do
-    conn
-    |> send_resp(200, "This is User page")
+  EEx.function_from_file :def, :show_user, "lib/Templates/show_user.eex", [:user_id]
+
+  get "/" do
+    send_resp(conn, 200, "This is User page")
   end
 
-  def route("GET", ["users", user_id], conn) do
+  get "/:user_id" do
+    page_content = show_user(user_id)
     conn
-    |> send_resp(200, "You are accessing user with id #{user_id}")
+      |> put_resp_content_type("text/html")
+      |> send_resp(200, page_content)
   end
 
 end

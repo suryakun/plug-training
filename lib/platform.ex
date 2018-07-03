@@ -1,24 +1,21 @@
 defmodule Platform do
+
   use Platform.Macros.Router
-  import Plug.Conn
-  alias Platform.Router.User
 
-  @user_router_option User.init([])
-  def route("GET", [], conn) do
-    conn
-    |> send_resp(200, "This is Index page")
+  forward "/users", to: Platform.Router.User
+
+  get "/" do
+	page_content = EEx.eval_file("lib/Templates/index.eex", [])
+	conn
+		|> put_resp_content_type("text/html")
+		|> send_resp(200, page_content)
   end
 
-  def route(_method, ["users" | _path], conn) do
-    User.call(conn, @user_router_option)
+  match _ do
+    send_resp(conn, 404, "Not Found")
   end
 
-  def route(_method, _path_info, conn) do
-    conn
-    |> send_resp(404, "Page not found")
-  end
-
-  def server() do
+  def start do
     {:ok, pid} = Plug.Adapters.Cowboy.http __MODULE__, []
     pid
   end
