@@ -2,6 +2,7 @@ defmodule Platform do
 
   use Platform.Macros.Router
 
+  forward "/static", to: Platform.Router.Static
   forward "/users", to: Platform.Router.User
 
   get "/" do
@@ -16,8 +17,9 @@ defmodule Platform do
   end
 
   def start do
+    {:ok, repo} = Platform.Repo.start_link
     {:ok, pid} = Plug.Adapters.Cowboy.http __MODULE__, []
-    pid
+    {pid, repo}
   end
 
 end
