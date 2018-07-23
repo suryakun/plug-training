@@ -4,6 +4,7 @@ defmodule Platform.Macros.Router do
     quote do
       use Plug.Router
       plug Plug.Logger
+      plug Plug.Parsers, parsers: [:urlencoded, :multipart]
       plug :match
       plug :dispatch
     end

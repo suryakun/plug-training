@@ -2,11 +2,7 @@
 <html>
   <body>
 	<h1>User Information Page</h1>
-	<p>You looking for user with ID <%= user_id %>.</p>
-	<p>You can also execute elixir code, 1 + 1 = <%= 1 + 1 %></p>
-	<%= if user_id == "1" do %>
-	  <%# this is not rendered %>
-	  User with ID 1 is Surya
-	<% end %>
+	<p>You looking for user with ID <%= user.id %>.</p>
+	<p>With name <%= user.name %> and email <%= user.email %>.</p>
   </body>
 </html>
